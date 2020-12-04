@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   onCreatePost(postData: Post ) {
     // Send Http request
     this.http
-      .post(
+      .post<{ name: string }>(
         'https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json',
         postData
       )
@@ -35,8 +35,9 @@ export class AppComponent implements OnInit {
 
   private fetchPosts() {
     // important: subscription required to start request stream
-    this.http.get('https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json')
-      .pipe(map((responseData: { [Key: string]: Post }) => {
+    this.http.get<{ [key: string]: Post}>('https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json')
+      .pipe(
+        map(responseData => {
         const postsArray: Post[] = [];
         for (const key in responseData) {
           if (responseData.hasOwnProperty(key)) {
