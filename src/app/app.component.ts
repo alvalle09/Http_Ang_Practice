@@ -1,3 +1,4 @@
+import { Post } from './post.model';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -16,7 +17,7 @@ export class AppComponent implements OnInit {
       this.fetchPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: Post ) {
     // Send Http request
     this.http
       .post(
@@ -35,8 +36,8 @@ export class AppComponent implements OnInit {
   private fetchPosts() {
     // important: subscription required to start request stream
     this.http.get('https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json')
-      .pipe(map(responseData => {
-        const postsArray = [];
+      .pipe(map((responseData: { [Key: string]: Post }) => {
+        const postsArray: Post[] = [];
         for (const key in responseData) {
           if (responseData.hasOwnProperty(key)) {
             postsArray.push({ ...responseData[key], id: key })
