@@ -16,40 +16,34 @@ export class AppComponent implements OnInit {
   constructor(private http: HttpClient, private postsService: PostsService) {}
 
   ngOnInit() {
-      this.fetchPosts();
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe(posts => {
+      this.isFetching = false;
+      this.loadedPosts = posts;
+    });
   }
 
   onCreatePost(postData: Post ) {
     this.postsService.createAndStorePost(postData.title, postData.content);
+    this.onFetchPosts();
   }
 
   onFetchPosts() {
-    this.fetchPosts();
+    this.isFetching = true;
+    this.postsService.fetchPosts().subscribe(posts => {
+      this.isFetching = false;
+      this.loadedPosts = posts;
+    });
   }
 
   private fetchPosts() {
-    this.isFetching = true;
-    
-    this.http.get<{ [key: string]: Post }>('https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json')
-      .pipe(
-        map(responseData => {
-        const postsArray: Post[] = [];
-        for (const key in responseData) {
-          if (responseData.hasOwnProperty(key)) {
-            postsArray.push({ ...responseData[key], id: key })
-          }
-        }
-        return postsArray;
-      })
-      )
-      // important: subscription required to start request stream
-      .subscribe(posts => {
-        this.isFetching = false;
-        this.loadedPosts = posts;
-      })
+   this.postsService.fetchPosts();      
   }
 
   onClearPosts() {
-    // Send Http request
+    // handled in post.service, but get notified here
+    this.postsService.deletePosts().subscribe(() => {
+      this.loadedPosts = [];
+    })
   }
 }
