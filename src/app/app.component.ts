@@ -1,3 +1,4 @@
+import { PostsService } from './posts.service';
 import { Post } from './post.model';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -12,22 +13,14 @@ export class AppComponent implements OnInit {
   loadedPosts: Post[] = [];
   isFetching = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private postsService: PostsService) {}
 
   ngOnInit() {
       this.fetchPosts();
   }
 
   onCreatePost(postData: Post ) {
-    // Send Http request
-    this.http
-      .post<{ name: string }>(
-        'https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json',
-        postData
-      )
-      .subscribe(responseData => {
-        console.log(responseData);
-      });
+    this.postsService.createAndStorePost(postData.title, postData.content);
   }
 
   onFetchPosts() {
@@ -36,7 +29,7 @@ export class AppComponent implements OnInit {
 
   private fetchPosts() {
     this.isFetching = true;
-    // important: subscription required to start request stream
+    
     this.http.get<{ [key: string]: Post }>('https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json')
       .pipe(
         map(responseData => {
@@ -49,6 +42,7 @@ export class AppComponent implements OnInit {
         return postsArray;
       })
       )
+      // important: subscription required to start request stream
       .subscribe(posts => {
         this.isFetching = false;
         this.loadedPosts = posts;
