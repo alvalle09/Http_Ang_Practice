@@ -28,19 +28,26 @@ export class AppComponent implements OnInit {
   }
 
   onCreatePost(postData: Post ) {
-    this.postsService.createAndStorePost(postData.title, postData.content);
-    this.onFetchPosts();
+    this.postsService.createAndStorePost(postData.title, postData.content)
+      .subscribe(posts => {
+        this.isFetching = false;
+      }, error => {
+        this.error = error.message;
+        console.log(error);
+      },
+      () => this.onFetchPosts());          
   }
 
   onFetchPosts() {
     this.isFetching = true;
-    this.postsService.fetchPosts().subscribe(posts => {
-      this.isFetching = false;
-      this.loadedPosts = posts;
+    this.postsService.fetchPosts()
+      .subscribe(posts => {
+        this.isFetching = false;
+        this.loadedPosts = posts;
       }, error => {
         this.error = error.message;      
         console.log(error);
-    });
+        });
   }
 
   private fetchPosts() {
@@ -54,3 +61,4 @@ export class AppComponent implements OnInit {
     })
   }
 }
+
