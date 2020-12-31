@@ -44,10 +44,17 @@ export class AppComponent implements OnInit {
       .subscribe(posts => {
         this.isFetching = false;
         this.loadedPosts = posts;
-      }, error => {
+        }, 
+        error => {
+        this.isFetching = false;
         this.error = error.message;      
         console.log(error);
-        });
+        }
+      );
+  }
+
+  onHandleError() {
+    this.error = null;
   }
 
   private fetchPosts() {
