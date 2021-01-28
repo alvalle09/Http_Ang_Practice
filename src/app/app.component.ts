@@ -46,6 +46,7 @@ export class AppComponent implements OnInit {
         this.loadedPosts = posts;
         }, 
         error => {
+        // set fetching back to false cuz we're not fetching any more
         this.isFetching = false;
         this.error = error.message;      
         console.log(error);
