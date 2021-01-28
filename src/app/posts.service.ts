@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Subject, throwError } from 'rxjs';
 import { map, catchError } from "rxjs/operators";
@@ -26,7 +26,8 @@ export class PostsService {
       .get<{ [key: string]: Post }>(
         "https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json",
         {
-          headers: new HttpHeaders({ 'Custom-Header': 'Hello' })
+          headers: new HttpHeaders({ 'Custom-Header': 'Hello' }),
+          params: new HttpParams().set('print', 'pretty')
         }
       )
       .pipe(
