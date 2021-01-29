@@ -17,7 +17,10 @@ export class PostsService {
     return this.http
       .post<{ name: string }>(
         "https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json",
-        postData
+        postData,
+        {
+          observe: 'response'
+        }
       );
   }
 
@@ -53,7 +56,10 @@ export class PostsService {
 
   deletePosts() {
     return this.http.delete(
-      "https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json"
-    );
+      "https://ng-complete-guide-d4625-default-rtdb.firebaseio.com/posts.json",
+      {
+        observe: 'events'
+      }
+      );
   }
 }

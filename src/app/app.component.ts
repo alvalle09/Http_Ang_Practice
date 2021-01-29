@@ -44,9 +44,10 @@ export class AppComponent implements OnInit {
       .subscribe(posts => {
         this.isFetching = false;
         this.loadedPosts = posts;
+        console.log(posts);
         }, 
         error => {
-        // set fetching back to false cuz we're not fetching any more
+        // set fetching back to false since we're not fetching any more
         this.isFetching = false;
         this.error = error.message;      
         console.log(error);
